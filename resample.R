@@ -169,6 +169,3 @@ for (i in 1:length(lista_variables)) {
   masked <- mask(crop(ras_temp, mask), mask)
   writeRaster(masked, filename = lista_variables[i], overwrite = TRUE)
 }
-
-
-
