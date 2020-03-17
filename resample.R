@@ -71,6 +71,7 @@ foreach(i = 1:length(files_vars), .packages = "raster") %dopar% {
 
 parallel::stopCluster(cl)
 
+
 # ----------------------------------------------------------------------------------------------------- #
 
 
@@ -160,8 +161,7 @@ for (i in 1:length(lista_subregions)) {
   writeRaster(masked, filename = lista_subregions[i], overwrite = TRUE)
 }
 
-
-# /variables
+# variables
 lista_variables <- list.files(dirs[4], "tif$", full.names = TRUE)
 
 for (i in 1:length(lista_variables)) {
