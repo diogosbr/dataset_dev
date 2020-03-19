@@ -6,11 +6,11 @@
   },
 
 	"io": {
-	  "base_path": "/dados/pessoal/diogo/dataset_dev/results_test",
-		"rawdata_path": "/dados/pessoal/diogo/dataset_dev/rawdata",
+	  "base_path": "/dados/pessoal/diogo/dataset_dev/results_test3/",
+		"rawdata_path": "/dados/pessoal/diogo/dataset_dev/rawdata/",
 		"lu_relative_path": "land-use/",
 		"past_lu_relative_path": "land-use/past/",
-		"ecoregions_relative_path": "land-use/ecoregions/",
+		"ecoregions_relative_path": "land-use/ecoregions_old/",
 		"variables_relative_path": "variables/",
 		"species_relative_path": "species/",
 		"processed_relative_path": "processed/",
@@ -23,7 +23,7 @@
 	"variables": {
 		"variable_names": ["cb", "bd", "oc"],
 		"variable_types": ["B", "B", "C"],
-		"variable_weights": [1, [1, 10, 100, 200], 1],
+		"variable_weights": [1, [1, 100], 1],
 		"variable_scaling_factor": ["", "", ""],
 		"ready_variables": [true, false, false],
 		"ready_variables_raster_names": [
@@ -50,7 +50,7 @@
 		  "bd_variable_name": "bd",
 		  "bd_classes": ["M", "A", "B"],
 		  "bd_subfolders": ["raster_mammals", "raster_amphibians", "raster_birds"],
-		  "threads_harmonize": 20,
+		  "threads_harmonize": 50,
 		  "spp_table": {
 		    "spp_filename": "Habitats_marginal_excluded_habitats_selected_Brazil.csv",
 		    "spp_names_column": "taxonid",
@@ -70,8 +70,8 @@
 
 	"landscape_features": {
 	  "land_use":{
-	    "class_names": ["FOR", "NGR", "SHR", "DES", "WET", "AGR", "CGR", "WAT", "ICE", "URB"],
-	  	"class_types": ["N", "N", "N", "N", "N", "A", "A", "I", "I", "I"],
+	    "class_names": ["FOR", "NGR", "SHR", "DES", "WET", "AGR", "CGR", "WAT", "URB"],
+	  	"class_types": ["N", "N", "N", "N", "N", "A", "A", "I", "I"],
 	  	"classes_raster_names": [
 	  	  "ESA_landuse_300m_2015_forest_media_4.9km_Molweide.tif",
 	  	  "NatGrass_2015_4.9km_Moll.tif",
@@ -81,7 +81,6 @@
 	  	  "crop_final.tif",
 	  	  "culgrass_final.tif",
 	  	  "ESA_landuse_300m_2015_water_media_4.9km_Molweide.tif",
-	  	  "ESA_landuse_300m_2015_ice_media_4.9km_Molweide.tif",
 	  	  "ESA_landuse_300m_2015_urban_media_4.9km_Molweide.tif"
 	  	]
 	  },
@@ -100,41 +99,41 @@
 	      "Ecoregions2017_Eco_valueNames_4_9km_Molweide_reclassificado_desert.tif",
 	      "Ecoregions2017_Eco_valueNames_4_9km_Molweide_reclassificado_forest.tif",
 	      "Ecoregions2017_Eco_valueNames_4_9km_Molweide_reclassificado_Nat_grass.tif",
-	      "Ecoregions2017_Eco_valueNames_4_9km_Molweide_reclassificado_Shrubland.tif",
+	      "Ecoregions2017_Eco_valueNames_4_9km_Molweide_reclassificado_shrubland.tif",
 	      "Ecoregions2017_Eco_valueNames_4_9km_Molweide_reclassificado_wetland.tif"
 	    ],
-	    "failsafe_classes_to_fill": ["DES"]
+	    "failsafe_classes_to_fill": ["FOR"]
 	  },
 	  "area_scaling_factor": ""
 	},
 
 	"scenarios": {
-	  "use_threads": false,
+	  "use_threads": true,
 		"problem_type": "R",
-		"benchmark_scenarios": ["cb", "oc", "bd", ["cb", "oc"], ["cb", "bd"], ["cb", "bd", "oc"]],
+		"benchmark_scenarios": ["cb", "oc", "bd", ["cb", "oc"], ["cb", "bd", "oc"]],
 		"include_random_scenario": false,
-		"refresh_nsteps_per_benchmark": [1, 1, 3, 1, 3, 3],
+		"refresh_nsteps_per_benchmark": [1, 1, 2, 1, 2],
     "target_names": ["WRLD", "CBD"],
-		"target_areas_sqkm": ["", "4.3056e6"],
-		"tradeoff_curve_percent_step_size": 0.25,
-		"tradeoff_curve_percent_nstep_range": [1, 4],
+		"target_areas_sqkm": ["", "4.3056e3"],
+		"tradeoff_curve_percent_step_size": 0.5,
+		"tradeoff_curve_percent_nstep_range": [1, 2],
 		"sub-region_scenarios": {
-		  "include_subregion_scenarios": false,
-		  "sub-region_zoning_names": ["ecoregions"],
-		  "sub-region_relative_paths": ["land-use/ecoregions/"],
-		  "sub-region_raster_names": ["Ecoregions_reclassificado.tif"],
-		  "sub-region_names_tables": ["er_classes.csv"],
-		  "raster_codes_column": ["class"],
-		  "subregion_names_column": ["er"],
-		  "sub-region_zoning_combinations": ["", "ecoregions", ["", "ecoregions"]],
+		  "include_subregion_scenarios": true,
+		  "sub-region_zoning_names": ["states", "ecoregions"],
+		  "sub-region_relative_paths": ["subregions/", "land-use/ecoregions_old/"],
+		  "sub-region_raster_names": ["states-code.tif", "Ecoregions_reclassificado.tif"],
+		  "sub-region_names_tables": ["states-code.csv", "er_classes.csv"],
+		  "raster_codes_column": ["CODE", "class"],
+		  "subregion_names_column": ["NAME", "er"],
+		  "sub-region_zoning_combinations": ["", ["states", ""], "ecoregions", ["states", "ecoregions"], ["states", "ecoregions", ""]],
 		  "sub-region_flat_targets": [true, false],
 		  "sub-region_flat_targets_limits": [0.15, ""],
 		  "sub-region_user_defined_targets": [false, true],
 		  "sub-region_user_defined_targets_sqkm": ["", "restoration-constraints-per-ecoregion-total.csv"],
 		  "sub-region_econometric_targets": [true, false],
-		  "sub-region_econometric_targets_sqkm": ["restoration-constraints-per-country-total.csv", ""],
+		  "sub-region_econometric_targets_sqkm": ["restoration-constraints-per-states.csv", ""],
 		  "sub-region_ecosystemic_targets": [false, true],
-		  "sub-region_ecosystemic_targets_sqkm": ["", "4.3056e6"],
+		  "sub-region_ecosystemic_targets_sqkm": ["", "4.3056e3"],
 		  "sub-region_ecosystemic_hl_par": 0,
       "sub-region_ecosystems_minimum_par": 0,
       "power_range_collapse_risk_ecosyst": false

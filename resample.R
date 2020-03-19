@@ -16,6 +16,9 @@ mask <- projectRaster(mask, raster("/dados/rawdata/land-use/crop_class11_2015_4.
 # Removing outer rows and columns that all have NA
 mask <- trim(mask)
 
+
+# Resample rasters from rawdata -------------------------------------------
+
 # list raster file to mask
 files <- list.files("/dados/pessoal/diogo/dataset_dev/rawdata", pattern = "tif$", recursive = TRUE, full.names = TRUE)
 length(files)
@@ -70,3 +73,52 @@ foreach(i = 1:length(files_vars), .packages = "raster") %dopar% {
 }
 
 parallel::stopCluster(cl)
+
+
+# Creating subregions -----------------------------------------------------
+
+# States
+states <- rgdal::readOGR("/dados/pessoal/diogo/dataset_dev/GIS/estados_2010.shp")
+states <- spTransform(states, crs(raster("/dados/rawdata/land-use/crop_class11_2015_4.9km_Moll.tif")))
+
+states_ras <- rasterize(states, raster(files_vars[1]), field = "id")
+plot(states_ras)
+
+writeRaster(states_ras, "rawdata/subregions/states-code.tif")
+
+# Creating csv
+states_tab <- data.frame(states)
+states_tab <- states_tab[ , c("id", "sigla")]
+names(states_tab) <- c("CODE", "NAME")
+head(states_tab)
+write.csv(states_tab, "rawdata/subregions/states-code.csv")
+
+set.seed(42)
+states_tab_const <- states_tab
+states_tab_const$total <- rnorm(nrow(states), 1000, 100)
+write.csv(states_tab_const, "rawdata/subregions/restoration-constraints-per-states.csv")
+
+
+# Biomes
+biomes <- rgdal::readOGR("/dados/pessoal/diogo/dataset_dev/GIS/bioma.shp", stringsAsFactors = FALSE)
+#crs(biomes) <- crs(raster("/dados/rawdata/land-use/crop_class11_2015_4.9km_Moll.tif"))
+biomes <- spTransform(biomes, crs(raster("/dados/rawdata/land-use/crop_class11_2015_4.9km_Moll.tif")))
+
+biomes_ras <- rasterize(biomes, raster(files_vars[1]))
+plot(biomes_ras)
+writeRaster(biomes_ras, "rawdata/land-use/ecoregions/biomes-code.tif")
+
+
+# Creating csv
+biomes_tab <- data.frame(biomes)
+biomes_tab$id <- 1:6
+biomes_tab <- biomes_tab[ , c("id", "NOME")]
+names(biomes_tab) <- c("CODE", "NAME")
+
+head(biomes_tab)
+write.csv(biomes_tab, "rawdata/land-use/ecoregions/er_classes.csv")
+
+set.seed(42)
+biomes_tab_const <- biomes_tab
+biomes_tab_const$total <- rnorm(nrow(biomes), 1000, 100)
+write.csv(biomes_tab_const, "rawdata/land-use/ecoregions/restoration-constraints-per-biomes.csv")
