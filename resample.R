@@ -122,3 +122,25 @@ set.seed(42)
 biomes_tab_const <- biomes_tab
 biomes_tab_const$total <- rnorm(nrow(biomes), 1000, 100)
 write.csv(biomes_tab_const, "rawdata/land-use/ecoregions/restoration-constraints-per-biomes.csv")
+
+
+# select random species  --------------------------------------------------
+unlink("/dados/pessoal/diogo/dataset_dev/rawdata/species/placeholder_for_dev/")
+lista <- list.files("/dados/pessoal/diogo/dataset_dev/rawdata/species/", full.names = TRUE)
+
+lista_amp <- list.files(lista[4], pattern = ".tif", full.names = T)
+lista_birds <- list.files(lista[5], pattern = ".tif", full.names = T)
+lista_mam <- list.files(lista[6], pattern = ".tif", full.names = T)
+
+set.seed(42)
+lista_amp_delete <- sample(lista_amp, trunc(length(lista_amp)/2))
+set.seed(42)
+lista_birds_delete <- sample(lista_birds, trunc(length(lista_birds)/2))
+set.seed(42)
+lista_mam_delete <- sample(lista_mam, trunc(length(lista_mam)/2))
+
+unlink(lista_amp_delete)
+unlink(lista_birds_delete)
+unlink(lista_mam_delete)
+
+length(list.files("/dados/pessoal/diogo/dataset_dev/rawdata/species/", full.names = TRUE, r = T))
