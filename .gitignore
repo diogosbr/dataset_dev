@@ -3,7 +3,9 @@
 .RData
 .Ruserdata
 rawdata
+rawdata*
 rawdata_backup
 *.tif
 GIS
 results*
+*log
